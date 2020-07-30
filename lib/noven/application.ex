@@ -13,6 +13,9 @@ defmodule Noven.Application do
       NovenWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: Noven.PubSub},
+      Noven.DevicePresence,
+      {Registry, [keys: :unique, name: NovenMedia.NameRegistry]},
+      NovenMedia.Supervisor,
       # Start the Endpoint (http/https)
       NovenWeb.Endpoint
       # Start a worker by calling: Noven.Worker.start_link(arg)

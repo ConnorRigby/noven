@@ -15,6 +15,14 @@ defmodule Noven.Devices do
   end
 
   @doc """
+  Gets the user with the given signed token.
+  """
+  def get_device_by_token(token) do
+    {:ok, query} = DeviceToken.verify_token_query(token)
+    Repo.one(query)
+  end
+
+  @doc """
   Returns the list of devices.
 
   ## Examples

@@ -4,8 +4,26 @@ defmodule NovenMedia.Pipeline do
 
   require Logger
 
+  @default_presence %{
+    pipeline: "stop",
+    ssrc: nil
+  }
+
+  @doc false
+  def child_spec([%Noven.Devices.Device{} = device, port]) do
+    via = {:via, Registry, {NovenMedia.NameRegistry, {"pipeline", device.id}}}
+    start_spec = {__MODULE__, :start_link, [[device, port], [name: via]]}
+
+    %{
+      id: {:pipeline, device.id},
+      start: start_spec
+    }
+  end
+
   @impl true
-  def handle_init(port) do
+  def handle_init([device, port]) do
+    {:ok, _ref} = Noven.DevicePresence.track(self(), "devices", "#{device.id}", @default_presence)
+
     children = %{
       app_source: %Membrane.Element.UDP.Source{
         local_port_no: port,
@@ -24,12 +42,18 @@ defmodule NovenMedia.Pipeline do
     ]
 
     spec = %ParentSpec{children: children, links: links}
-    {{:ok, spec: spec}, %{}}
+    {{:ok, spec: spec}, %{device: device}}
   end
 
   @impl true
   def handle_notification({:new_rtp_stream, ssrc, :H264}, :rtp, state) do
-    directory = Application.app_dir(:noven, ["priv", "static", "stream"])
+    {:ok, _ref} =
+      Noven.DevicePresence.update(self(), "devices", "#{state.device.id}", %{
+        pipeline: "play",
+        ssrc: to_string(ssrc)
+      })
+
+    directory = Application.app_dir(:noven, ["priv", "static", "stream", to_string(ssrc)])
     File.mkdir_p(directory)
     video_timestamper = {:video_timestamper, make_ref()}
     video_nal_parser = {:video_nal_parser, make_ref()}

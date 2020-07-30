@@ -12,6 +12,7 @@
 
 default_email = "test@test.com"
 default_password = "password123456"
+alias Noven.Repo
 
 {:ok, user} =
   Noven.Accounts.register_user(%{
@@ -25,7 +26,7 @@ default_password = "password123456"
     name: "test",
     user_id: user.id
   }
-  |> Repo.insert!()
+  |> Repo.insert()
 
 token = Noven.Devices.generate_token(device)
 

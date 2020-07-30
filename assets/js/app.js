@@ -13,31 +13,31 @@ import "../css/app.scss"
 //     import socket from "./socket"
 //
 import "phoenix_html"
-import {Socket} from "phoenix"
+import { Socket } from "phoenix"
 import NProgress from "nprogress"
-import {LiveSocket} from "phoenix_live_view"
+import { LiveSocket } from "phoenix_live_view"
 import videojs from "video.js"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let Hooks = {}
 Hooks.Video = {
   mounted() {
-    var player = videojs('hls-example');
-    player.play();
+    this.player = videojs(this.el.id, { controls: true, autoplay: false });
+    this.player.play();
+  },
+  destroyed() {
+    this.player.dispose();
+  },
+  disconnected() {
+    this.player.dispose();
+  },
+  reconnected() {
+    this.player = videojs(this.el.id, { controls: true, autoplay: false });
+    this.player.play();
   }
 }
-// Hooks.PhoneNumber = {
-//   mounted() {
-//     this.el.addEventListener("input", e => {
-//       let match = this.el.value.replace(/\D/g, "").match(/^(\d{3})(\d{3})(\d{4})$/)
-//       if(match) {
-//         this.el.value = `${match[1]}-${match[2]}-${match[3]}`
-//       }
-//     })
-//   }
-// }
 
-let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } })
 
 // Show progress bar on live navigation and form submits
 window.addEventListener("phx:page-loading-start", info => NProgress.start())

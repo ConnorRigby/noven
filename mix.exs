@@ -10,6 +10,7 @@ defmodule Noven.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
+      releases: releases(),
       deps: deps()
     ]
   end
@@ -64,7 +65,8 @@ defmodule Noven.MixProject do
       {:membrane_element_fake, "~> 0.3"},
       {:membrane_loggers, "~> 0.3.0"},
       {:membrane_aac_plugin, "~> 0.4.0"},
-      {:turbojpeg, "~> 0.2.2"}
+      {:turbojpeg, "~> 0.2.2"},
+      {:ring_logger, "~> 0.8.1", only: :prod}
     ]
   end
 
@@ -80,6 +82,16 @@ defmodule Noven.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+    ]
+  end
+
+  defp releases do
+    [
+      noven: [
+        include_executables_for: [:unix],
+        applications: [runtime_tools: :permanent],
+        steps: [:assemble, :tar]
+      ]
     ]
   end
 end
