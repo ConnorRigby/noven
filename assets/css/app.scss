@@ -7,9 +7,11 @@
 
 /* LiveView specific classes for your customizations */
 .invalid-feedback {
-  color: #a94442;
   display: block;
-  margin: -1rem 0 2rem;
+  @apply text-red-500;
+  @apply text-xs;
+  @apply italic;
+  @apply px-1;
 }
 
 .phx-no-feedback.invalid-feedback, .phx-no-feedback .invalid-feedback {
@@ -42,18 +44,15 @@
 }
 
 .phx-modal-content {
-  background-color: #fefefe;
   margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
   width: 80%;
 }
 
 .phx-modal-close {
-  color: #aaa;
-  float: right;
   font-size: 28px;
   font-weight: bold;
+  @apply p-2;
+  @apply rounded-full;
 }
 
 .phx-modal-close:hover,

@@ -7,9 +7,32 @@
     return_to: Routes.device_index_path(@socket, :index) %>
 <% end %>
 
-<div class="px-6 py-6 bg-white shadow-xl">
-    <div class="flex justify-between">
-      <span class="text-xl uppercase font-bold"> Active Devices </span>
-      <%= live_patch "New Device", to: Routes.device_index_path(@socket, :new), class: "form-nav" %>
-    </div>
+<div class="px-6 py-6">
+  <div class="flex items-center justify-between bg-white shadow-xl py-4">
+    <span class="text-xl uppercase font-bold px-4"> Active Devices </span>
+    <span class="px-4 py-4">
+    <%= live_patch "New Device", to: Routes.device_index_path(@socket, :new), class: "form-nav" %>
+    </span>
+  </div>
+
+  <div class="flex flex-wrap py-4">
+    <%= for device <- @devices do %>
+      <div class="w-full rounded shadow-xl bg-white border" >
+        <div class="text-gray-900 font-bold text-xl m-4 uppercase">  <%= device.name %> </div>
+        <div class="flex justify-around bg-white py-4">
+          <div class="flex-col">
+            <p class="text-gray-700 text-lg">Live Feed</p>
+            <video id='hls-example' phx-hook="Video" class="video-js vjs-default-skin" controls>
+              <source type="application/x-mpegURL" src="/stream/index.m3u8">
+            </video>
+          </div>
+          <div class="flex-col">
+            <p class="text-gray-700 text-lg">Info</p>
+            <p>Current Job: dog-004.gcode </p>
+            <p>Progress: 69%</p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

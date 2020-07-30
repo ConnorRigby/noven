@@ -1,22 +1,16 @@
-<h2><%= @title %></h2>
-
 <%= f = form_for @changeset, "#",
   id: "device-form",
+  class: "p-4",
   phx_target: @myself,
   phx_change: "validate",
   phx_submit: "save" %>
+  <div class="w-full px-3">
+    <%= label f, :name, class: "form-label" %>
+    <%= error_tag f, :name %>
+    <%= text_input f, :name, class: "form-text-input" %>
+  </div>
 
-  <%= label f, :serial %>
-  <%= text_input f, :serial %>
-  <%= error_tag f, :serial %>
-
-  <%= label f, :name %>
-  <%= text_input f, :name %>
-  <%= error_tag f, :name %>
-
-  <%= label f, :last_connected %>
-  <%= datetime_select f, :last_connected %>
-  <%= error_tag f, :last_connected %>
-
-  <%= submit "Save", phx_disable_with: "Saving..." %>
+  <div class="w-full px-3">
+    <%= submit "Save", phx_disable_with: "Saving...", class: "form-nav" %>
+  </div>
 </form>

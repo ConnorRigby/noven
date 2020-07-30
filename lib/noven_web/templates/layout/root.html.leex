@@ -25,7 +25,7 @@
         <div class="text-sm lg:flex-grow">
           <%= link "Dashboard", to: Routes.page_path(@conn, :index), class: "nav-link" %>
           <%= link "Devices", to: Routes.device_index_path(@conn, :index), class: "nav-link" %>
-          <%= link "Prints", to: Routes.page_path(@conn, :index), class: "nav-link" %>
+          <%= link "Printers", to: Routes.page_path(@conn, :index), class: "nav-link" %>
         </div>
         <div>
           <%= if @current_user do %>

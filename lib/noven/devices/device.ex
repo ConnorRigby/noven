@@ -16,7 +16,7 @@ defmodule Noven.Devices.Device do
   @doc false
   def changeset(device, attrs) do
     device
-    |> cast(attrs, [:user_id, :serial, :name, :last_connected])
-    |> validate_required([:serial, :name])
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
   end
 end

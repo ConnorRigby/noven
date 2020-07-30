@@ -27,6 +27,10 @@ defmodule Noven.Devices do
     Repo.all(Device)
   end
 
+  def list_devices(user) do
+    Repo.preload(user, :devices).devices
+  end
+
   @doc """
   Gets a single device.
 
@@ -42,6 +46,10 @@ defmodule Noven.Devices do
 
   """
   def get_device!(id), do: Repo.get!(Device, id)
+
+  def get_device!(%{id: user_id}, id) do
+    Repo.one!(from d in Device, where: d.id == ^id and d.user_id == ^user_id)
+  end
 
   @doc """
   Creates a device.

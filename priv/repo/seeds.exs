@@ -20,11 +20,12 @@ default_password = "password123456"
   })
 
 {:ok, device} =
-  Noven.Devices.create_device(%{
+  %Noven.Devices.Device{
     serial: "abcdef",
     name: "test",
     user_id: user.id
-  })
+  }
+  |> Repo.insert!()
 
 token = Noven.Devices.generate_token(device)
 

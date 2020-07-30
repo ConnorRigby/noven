@@ -11,8 +11,11 @@ defmodule NovenWeb.ModalComponent do
       phx-target="#<%= @id %>"
       phx-page-loading>
 
-      <div class="phx-modal-content">
+      <div class="phx-modal-content rounded px-4 border shadow-xl bg-white">
+        <div class="flex items-center justify-between">
+        <div> <%=@opts[:title] || "Modal" %></div>
         <%= live_patch raw("&times;"), to: @return_to, class: "phx-modal-close" %>
+        </div>
         <%= live_component @socket, @component, @opts %>
       </div>
     </div>

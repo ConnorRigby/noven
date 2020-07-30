@@ -130,6 +130,7 @@ defmodule NovenWeb.UserAuth do
   def require_authenticated_user(conn, _opts) do
     if conn.assigns[:current_user] do
       conn
+      |> put_session("current_user_id", conn.assigns[:current_user].id)
     else
       conn
       |> put_flash(:error, "You must log in to access this page.")
