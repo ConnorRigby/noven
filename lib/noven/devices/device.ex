@@ -8,6 +8,7 @@ defmodule Noven.Devices.Device do
     field :serial, :string
     field :user_id, :id
     has_one :device_token, Noven.Devices.DeviceToken
+    has_many :printers, Noven.Printer
 
     timestamps()
   end

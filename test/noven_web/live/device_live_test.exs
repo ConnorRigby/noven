@@ -8,16 +8,14 @@ defmodule NovenWeb.DeviceLiveTest do
   @create_attrs %{
     last_connected: "2010-04-17T14:00:00Z",
     name: "some name",
-    serial: "some serial",
-    token: "some token"
+    serial: "some serial"
   }
   @update_attrs %{
     last_connected: "2011-05-18T15:01:01Z",
     name: "some updated name",
-    serial: "some updated serial",
-    token: "some updated token"
+    serial: "some updated serial"
   }
-  @invalid_attrs %{last_connected: nil, name: nil, serial: nil, token: nil}
+  @invalid_attrs %{last_connected: nil, name: nil, serial: nil}
 
   defp fixture(:device) do
     {:ok, device} = Devices.create_device(@create_attrs)

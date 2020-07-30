@@ -1,7 +1,9 @@
 /* This file is for your main application css. */
-@import "./phoenix.css";
 @import "../node_modules/nprogress/nprogress.css";
 @import "../node_modules/video.js/dist/video-js.min.css";
+@tailwind base;
+@tailwind components;
+
 
 /* LiveView specific classes for your customizations */
 .invalid-feedback {
@@ -90,3 +92,66 @@
 .alert:empty {
   display: none;
 }
+
+.nav-link {
+  @apply block;
+  @apply text-purple-200;
+  @apply mr-4;
+  @apply mt-0;
+  @apply inline-block;
+}
+
+.nav-link:hover {
+  @apply text-white;
+}
+
+.form-nav {
+  @apply rounded;
+  @apply py-2;
+  @apply px-2;
+  @apply shadow;
+  @apply bg-purple-500;
+  @apply text-white;
+  @apply font-bold;
+}
+
+.form-nav:hover {
+  @apply bg-purple-400;
+}
+
+.form-nav:focus {
+  @apply shadow-outline;
+  @apply outline-none;
+}
+
+.form-label {
+  @apply block;
+  @apply uppercase;
+  @apply tracking-wide;
+  @apply text-gray-700;
+  @apply text-xs;
+  @apply font-bold;
+}
+
+.form-text-input {
+  @apply appearance-none;
+  @apply block;
+  @apply w-full;
+  @apply bg-gray-200;
+  @apply text-gray-700;
+  @apply border;
+  @apply border-gray-200;
+  @apply rounded;
+  @apply py-3;
+  @apply px-4;
+  @apply mb-4;
+  @apply leading-tight;
+}
+
+.form-text-input:focus {
+  @apply outline-none;
+  @apply bg-white;
+  @apply border-gray-500;
+}
+
+@tailwind utilities;

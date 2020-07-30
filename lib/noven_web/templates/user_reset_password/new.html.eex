@@ -1,15 +1,20 @@
-<h1>Forgot your password?</h1>
+<div class="px-6 py-6">
+  <%= form_for :user, Routes.user_reset_password_path(@conn, :create), [class: "w-full py-4 px-4 bg-white rounded shadow-xl shadow-lg"], fn f -> %>
+    <div class="flex items-center justify-between">
+      <span class="text-xl uppercase font-bold"> Forgot your password? </span>
+      <div>
+        <%= link "Login", to: Routes.user_session_path(@conn, :new), class: "mr-4 form-nav" %>
+        <%= link "Register", to: Routes.user_registration_path(@conn, :new), class: "form-nav" %>
+      </div>
+    </div>
 
-<%= form_for :user, Routes.user_reset_password_path(@conn, :create), fn f -> %>
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
+    <div class="w-full px-3">
+      <%= label f, :email, class: "form-label" %>
+      <%= text_input f, :email, required: true, class: "form-text-input" %>
+    </div>
 
-  <div>
-    <%= submit "Send instructions to reset password" %>
-  </div>
-<% end %>
-
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %>
-</p>
+    <div class="w-full px-3">
+      <%= submit "Send instructions to reset password", class: "form-nav" %>
+    </div>
+  <% end %>
+</div>
