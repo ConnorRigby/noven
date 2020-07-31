@@ -34,7 +34,7 @@ COPY lib lib
 RUN mix do compile, release
 
 # prepare release image
-FROM alpine:3.9 AS app
+FROM compile AS app
 RUN apk add --no-cache openssl ncurses-libs
 
 ENV MIX_ENV=prod
