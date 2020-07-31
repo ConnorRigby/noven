@@ -3,7 +3,8 @@ defmodule NovenWeb.DeviceChannel do
 
   def join(_topic, _params, socket) do
     port = 5000
-    host = socket.endpoint.host()
+    # host = socket.endpoint.host()
+    host = "127.0.0.1"
 
     case NovenMedia.Supervisor.start_pipeline(socket.assigns.device, port) do
       {:ok, pid} ->

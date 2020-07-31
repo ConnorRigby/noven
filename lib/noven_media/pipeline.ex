@@ -42,11 +42,13 @@ defmodule NovenMedia.Pipeline do
     ]
 
     spec = %ParentSpec{children: children, links: links}
-    {{:ok, spec: spec}, %{device: device}}
+    {{:ok, spec: spec}, %{device: device, table: nil}}
   end
 
   @impl true
   def handle_notification({:new_rtp_stream, ssrc, :H264}, :rtp, state) do
+    table = :ets.new(:"stream-#{state.device.id}", [:public, :named_table])
+
     {:ok, _ref} =
       Noven.DevicePresence.update(self(), "devices", "#{state.device.id}", %{
         pipeline: "play",
@@ -89,7 +91,8 @@ defmodule NovenMedia.Pipeline do
       hls_encoder => %Membrane.HTTPAdaptiveStream.Sink{
         manifest_module: Membrane.HTTPAdaptiveStream.HLS,
         target_window_duration: 10 |> Membrane.Time.seconds(),
-        storage: %Membrane.HTTPAdaptiveStream.Storages.FileStorage{directory: directory}
+        # storage: %Membrane.HTTPAdaptiveStream.Storages.FileStorage{directory: directory}
+        storage: %NovenMedia.ETSStorage{table: table}
       }
     }
 
@@ -109,7 +112,7 @@ defmodule NovenMedia.Pipeline do
     ]
 
     spec = %ParentSpec{children: children, links: links}
-    {{:ok, spec: spec}, state}
+    {{:ok, spec: spec}, %{state | table: table}}
   end
 
   def handle_notification({:new_rtp_stream, ssrc, _}, :rtp, state) do

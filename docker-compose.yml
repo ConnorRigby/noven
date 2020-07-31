@@ -19,6 +19,9 @@ services:
     environment:
       DATABASE_URL: "ecto://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/noven_prod"
       MIX_ENV: prod
-    restart: always
+    # restart: always
+    # volumes:
+      # -stream-data:/app/
 volumes:
   db-data:
+  stream-data:

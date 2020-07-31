@@ -16,7 +16,7 @@ config :noven, Noven.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :noven, NovenWeb.Endpoint,
-  http: [host: System.get_env("NOVEN_HOST") || "127.0.0.1", port: 4000],
+  http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

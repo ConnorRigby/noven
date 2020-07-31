@@ -1,0 +1,3 @@
+<video id='stream' class="video-js vjs-default-skin" width="640" height="480" controls>
+  <source type="application/x-mpegURL" src="/stream/index.m3u8" />
+</video>

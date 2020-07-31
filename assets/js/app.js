@@ -50,3 +50,6 @@ liveSocket.connect()
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)
 window.liveSocket = liveSocket
+
+var player = videojs("stream", { controls: true, autoplay: false });
+player.play();
