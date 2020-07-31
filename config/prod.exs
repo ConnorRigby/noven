@@ -13,7 +13,7 @@ use Mix.Config
 config :noven, NovenWeb.Endpoint,
   secret_key_base: "OnFi2jrAAfmCc15upUIxUqFaVwJBOW/NGtQCFCqQJntgnYQIWVmrDZTPF5Vt453a",
   cache_static_manifest: "priv/static/cache_manifest.json",
-  url: [host: "noven.app", port: 443],
+  url: [host: "noven.app", port: 443, scheme: "https"],
   server: true,
   http: [
     port: 4000,

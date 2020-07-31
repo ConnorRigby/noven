@@ -1,34 +1,51 @@
-FROM erlang:22.3.4.4-alpine
+FROM erlang:22.3.4.4-alpine as build
 ENV ELIXIR_VERSION="v1.10.4"
-LABEL maintainer="Connor Rigby (connorr@hey.com)"
 
-WORKDIR /tmp/elixir-build
+# # install elixir
+RUN wget https://repo.hex.pm/builds/elixir/$ELIXIR_VERSION.zip && \
+    mkdir -p /usr/local/elixir && \
+    unzip -d /usr/local/elixir $ELIXIR_VERSION.zip
+ENV PATH=/usr/local/elixir/bin:$PATH
 
-RUN apk --no-cache --update upgrade && \
-    apk add --no-cache --update --virtual .elixir-build \
-      make && \
-    apk add --no-cache --update \
-      git && \
-    git clone https://github.com/elixir-lang/elixir --depth 1 --branch $ELIXIR_VERSION && \
-    cd elixir && \
-    make && make install && \
-    mix local.hex --force && \
-    mix local.rebar --force && \
-    cd $HOME && \
-    rm -rf /tmp/elixir-build && \
-    apk del --no-cache .elixir-build
+RUN apk add bash npm make alpine-sdk ffmpeg-dev libjpeg-turbo-dev
 
-RUN apk add npm
+RUN mix do local.hex --force, local.rebar --force
 
-ONBUILD RUN mix do local.hex --force, local.rebar --force
+from build AS compile
 
+ENV MIX_ENV=prod
 WORKDIR /app
-COPY . .
 
-RUN mix deps.get
-RUN npm install --prefix assets
-RUN npm run deploy --prefix assets
-RUN mix deps.compile
-RUN mix compile
+COPY mix.exs mix.lock ./
+COPY config config
+RUN mix do deps.get, deps.compile
+
+# build assets
+COPY assets/package.json assets/package-lock.json ./assets/
+RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
+
+COPY priv priv
+COPY assets assets
+RUN npm run --prefix ./assets deploy
 RUN mix phx.digest
-RUN mix release
+
+# compile and build release
+COPY lib lib
+RUN mix do compile, release
+
+# prepare release image
+FROM alpine:3.9 AS app
+RUN apk add --no-cache openssl ncurses-libs
+
+ENV MIX_ENV=prod
+WORKDIR /app
+
+RUN chown nobody:nobody /app
+
+USER nobody:nobody
+
+COPY --from=compile --chown=nobody:nobody /app/_build/prod/rel/noven ./
+
+ENV HOME=/app
+
+CMD ["bin/noven", "start"]

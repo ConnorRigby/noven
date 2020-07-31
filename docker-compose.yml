@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 services:
   db:
     image: postgres
@@ -16,8 +16,7 @@ services:
     depends_on:
       - db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       DATABASE_URL: "ecto://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/noven_prod"
+      MIX_ENV: prod
 volumes:
   db-data:
