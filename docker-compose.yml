@@ -11,8 +11,9 @@ services:
   web:
     build: .
     ports:
-      - "5000:5000"
-      - "4000:4000"
+      - 5000:5000
+      - 5000:5000/udp
+      - 4000:4000
     depends_on:
       - db
     environment:
