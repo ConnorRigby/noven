@@ -101,14 +101,14 @@ defmodule NovenMedia.Pipeline do
       |> via_out(Pad.ref(:output, ssrc))
       |> to(video_timestamper)
       |> to(video_nal_parser)
-      |> to(tee)
+      # |> to(tee)
       |> to(video_payloader)
       |> to(video_cmaf_muxer)
       |> via_in(:input)
       |> to(hls_encoder),
-      link(tee)
-      |> to(decoder)
-      |> to(thumbnailer)
+      # link(tee)
+      # |> to(decoder)
+      # |> to(thumbnailer)
     ]
 
     spec = %ParentSpec{children: children, links: links}
