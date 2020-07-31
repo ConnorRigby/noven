@@ -21,8 +21,15 @@ defmodule NovenMedia.Pipeline do
   end
 
   @impl true
+  def handle_shutdown(_reason, state) do
+    if state.table, do: :ets.delete(state.table)
+    :ok
+  end
+
+  @impl true
   def handle_init([device, port]) do
     {:ok, _ref} = Noven.DevicePresence.track(self(), "devices", "#{device.id}", @default_presence)
+    table = :ets.new(:"stream-#{device.id}", [:public, :named_table])
 
     children = %{
       app_source: %Membrane.Element.UDP.Source{
@@ -42,13 +49,11 @@ defmodule NovenMedia.Pipeline do
     ]
 
     spec = %ParentSpec{children: children, links: links}
-    {{:ok, spec: spec}, %{device: device, table: nil}}
+    {{:ok, spec: spec}, %{device: device, table: table}}
   end
 
   @impl true
   def handle_notification({:new_rtp_stream, ssrc, :H264}, :rtp, state) do
-    table = :ets.new(:"stream-#{state.device.id}", [:public, :named_table])
-
     {:ok, _ref} =
       Noven.DevicePresence.update(self(), "devices", "#{state.device.id}", %{
         pipeline: "play",
@@ -92,7 +97,7 @@ defmodule NovenMedia.Pipeline do
         manifest_module: Membrane.HTTPAdaptiveStream.HLS,
         target_window_duration: 10 |> Membrane.Time.seconds(),
         # storage: %Membrane.HTTPAdaptiveStream.Storages.FileStorage{directory: directory}
-        storage: %NovenMedia.ETSStorage{table: table}
+        storage: %NovenMedia.ETSStorage{table: state.table}
       }
     }
 
@@ -105,14 +110,14 @@ defmodule NovenMedia.Pipeline do
       |> to(video_payloader)
       |> to(video_cmaf_muxer)
       |> via_in(:input)
-      |> to(hls_encoder),
+      |> to(hls_encoder)
       # link(tee)
       # |> to(decoder)
       # |> to(thumbnailer)
     ]
 
     spec = %ParentSpec{children: children, links: links}
-    {{:ok, spec: spec}, %{state | table: table}}
+    {{:ok, spec: spec}, state}
   end
 
   def handle_notification({:new_rtp_stream, ssrc, _}, :rtp, state) do

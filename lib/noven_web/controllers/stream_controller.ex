@@ -5,6 +5,9 @@ defmodule NovenWeb.StreamController do
     case :ets.lookup(:"stream-1", "index.m3u8") do
       [{_, contents}] ->
         send_resp(conn, 200, contents)
+
+      [] ->
+        send_resp(conn, 404, "not found")
     end
   end
 
