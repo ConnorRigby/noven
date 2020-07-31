@@ -59,10 +59,6 @@ defmodule NovenWeb.Router do
 
     live "/devices/:id", DeviceLive.Show, :show
     live "/devices/:id/show/edit", DeviceLive.Show, :edit
-
-    get "/stream/index.m3u8", StreamController, :index
-    get "/stream", StreamController, :stream
-    get "/stream/:data", StreamController, :data
   end
 
   scope "/", NovenWeb do
@@ -72,5 +68,9 @@ defmodule NovenWeb.Router do
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :confirm
+
+    get "/stream/index.m3u8", StreamController, :index
+    get "/stream", StreamController, :stream
+    get "/stream/:data", StreamController, :data
   end
 end
