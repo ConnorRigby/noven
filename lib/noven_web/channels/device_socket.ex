@@ -7,7 +7,7 @@ defmodule NovenWeb.DeviceSocket do
 
   @impl true
   def connect(%{"token" => token}, socket, _connect_info) do
-    with {:ok, token} <- Base.decode64(token, padding: false),
+    with {:ok, token} <- Base.url_decode64(token, padding: false),
          token <- :crypto.hash(:sha256, token),
          %Noven.Devices.Device{} = device <- Noven.Devices.get_device_by_token(token) do
       {:ok,
