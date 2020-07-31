@@ -40,8 +40,8 @@ defmodule NovenMedia.Thumbnailer do
     } = state.caps
 
     case Turbojpeg.yuv_to_jpeg(payload, width, height, 90, format) do
-      {:ok, jpeg} ->
-        File.write!("test.jpg", Shmex.to_binary(jpeg))
+      {:ok, _jpeg} ->
+        # File.write!("test.jpg", Shmex.to_binary(jpeg))
         actions = [demand: :input]
         {{:ok, actions}, state}
 
